@@ -1,0 +1,70 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/clang",
+      "-g",
+      "-Wall",
+      "-Wextra",
+      "-pedantic",
+      "-std=c99",
+      "-c",
+      "-o",
+      "build/main.o",
+      "main.c"
+    ],
+    "directory": "/home/gabriel/src/song",
+    "file": "/home/gabriel/src/song/main.c",
+    "output": "/home/gabriel/src/song/build/main.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/clang",
+      "-g",
+      "-Wall",
+      "-Wextra",
+      "-pedantic",
+      "-std=c99",
+      "-c",
+      "-o",
+      "build/channels.o",
+      "channels.c"
+    ],
+    "directory": "/home/gabriel/src/song",
+    "file": "/home/gabriel/src/song/channels.c",
+    "output": "/home/gabriel/src/song/build/channels.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/clang",
+      "-g",
+      "-Wall",
+      "-Wextra",
+      "-pedantic",
+      "-std=c99",
+      "-c",
+      "-o",
+      "build/music_theory.o",
+      "music_theory.c"
+    ],
+    "directory": "/home/gabriel/src/song",
+    "file": "/home/gabriel/src/song/music_theory.c",
+    "output": "/home/gabriel/src/song/build/music_theory.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/clang",
+      "-g",
+      "-Wall",
+      "-Wextra",
+      "-pedantic",
+      "-std=c99",
+      "-c",
+      "-o",
+      "build/player.o",
+      "player.c"
+    ],
+    "directory": "/home/gabriel/src/song",
+    "file": "/home/gabriel/src/song/player.c",
+    "output": "/home/gabriel/src/song/build/player.o"
+  }
+]
