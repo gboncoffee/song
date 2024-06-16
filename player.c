@@ -51,8 +51,8 @@ int parseSongInfo(Player *player, char **lines, int lineNum, int i) {
   for (; i < lineNum; i++) {
     int len = strlen(lines[i]);
     if (len > 0) {
-      if (sscanf(lines[i], "%f %d %d %f", &player->tune, &player->key,
-                 &player->octave, &player->align) != 4) {
+      if (sscanf(lines[i], "%f %d %f", &player->tune, &player->key,
+                 &player->align) != 3) {
         printf("Malformed file: info line does not parse correctly.\n");
         return -1;
       }
@@ -97,14 +97,16 @@ int parseSongLines(Player *player, char **lines, int lineNum, int i) {
   Channels channel = CHANNEL_PULSE;
 
   // Add a single pause in the beggining to compensate the first frames.
-  SongUnit spareUnit = (SongUnit){1 * player->align, 0};
+  SongUnit spareUnit = (SongUnit){1 * player->align, 0, 0, 0};
   appendSongUnitArray(&player->pulseNotes, spareUnit);
   appendSongUnitArray(&player->sinNotes, spareUnit);
 
+  int octave = 4;
+  float volume = 1;
   for (; i < lineNum; i++) {
-    if (strcmp(lines[i], "pulse") == 0) {
+    if (sscanf(lines[i], "pulse %d %f", &octave, &volume) == 2) {
       channel = CHANNEL_PULSE;
-    } else if (strcmp(lines[i], "sin") == 0) {
+    } else if (sscanf(lines[i], "sin %d %f", &octave, &volume) == 2) {
       channel = CHANNEL_SIN;
 
     } else if (strlen(lines[i]) > 0) {
@@ -114,7 +116,7 @@ int parseSongLines(Player *player, char **lines, int lineNum, int i) {
 
       char *tok = strtok(NULL, " ");
       while (tok != NULL) {
-        SongUnit unit = (SongUnit){time * player->align, atoi(tok)};
+        SongUnit unit = (SongUnit){time * player->align, atoi(tok), octave, volume};
         if (unit.note > player->scale.size) {
           printf("Note bigger than scale at line %d: %d\n", i, unit.note);
           return (errno = 1);
@@ -218,9 +220,10 @@ void updateChannelWithArray(Player *player, SongUnitArray *array,
   SongUnit unit = array->units[array->iterator];
   toggleChannels(channel, unit.note != 0);
 
-  float frequency = num2frequency(player->tune, player->key, player->octave,
+  float frequency = num2frequency(player->tune, player->key, unit.octave,
                                   unit.note, player->scale);
   setChannelsFrequency(channel, frequency);
+  setChannelsVolume(channel, unit.volume);
 }
 
 bool update(Player *player) {
@@ -242,7 +245,6 @@ bool update(Player *player) {
   DrawText(player->songName, 0, 30, 30, WHITE);
   DrawText(TextFormat("Tune: %f", player->tune), 0, 60, 30, WHITE);
   DrawText(TextFormat("Key: %d", player->key), 0, 90, 30, WHITE);
-  DrawText(TextFormat("Octave: %d", player->octave), 0, 120, 30, WHITE);
   DrawText(TextFormat("Alignment: %f", player->align), 0, 150, 30, WHITE);
 
   EndDrawing();

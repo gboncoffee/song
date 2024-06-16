@@ -9,6 +9,8 @@ typedef struct {
   float time;
   /* 0 means pause. */
   int note;
+  int octave;
+  float volume;
 } SongUnit;
 
 typedef struct {
@@ -25,7 +27,6 @@ typedef struct {
 typedef struct {
   float tune;
   Note key;
-  int octave;
   float align;
 	Scale scale;
   SongUnitArray sinNotes;

@@ -17,10 +17,10 @@ typedef enum {
   CHANNEL_PULSE = 1 << 1,
 } Channels;
 
-void updateSinChannel(void *data, unsigned int frames);
-void updatePulseChannel(void *data, unsigned int frames);
-
+void initChannels(void);
+void deleteChannels(void);
 void toggleChannels(Channels channels, bool play);
 void setChannelsFrequency(Channels channels, float frequency);
+void setChannelsVolume(Channels channels, float volume);
 
 #endif  // SONG_H_

@@ -21,26 +21,15 @@ int main(int argc, char *argv[]) {
 
   InitWindow(1200, 800, "Senspecimenprogramaro de Ondformo Generatori");
   InitAudioDevice();
-  // SetTargetFPS(60);
 
-  AudioStream sinChannel = LoadAudioStream(SAMPLE_RATE, 8, 1);
-  AudioStream pulseChannel = LoadAudioStream(SAMPLE_RATE, 8, 1);
-
-  toggleChannels(CHANNEL_PULSE, false);
-  toggleChannels(CHANNEL_SIN, false);
-  setChannelsFrequency(CHANNEL_PULSE | CHANNEL_SIN, 440);
-
-  SetAudioStreamCallback(sinChannel, updateSinChannel);
-  SetAudioStreamCallback(pulseChannel, updatePulseChannel);
-  PlayAudioStream(sinChannel);
-  PlayAudioStream(pulseChannel);
+  initChannels();
 
   while (!WindowShouldClose()) {
     if (!update(&player)) break;
   }
 
-  UnloadAudioStream(sinChannel);
-  UnloadAudioStream(pulseChannel);
+  deleteChannels();
+
   CloseAudioDevice();
   CloseWindow();
 

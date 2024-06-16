@@ -27,8 +27,6 @@ ASCII values:
 - The tuning, i.e., the frequency of the A4 note in hertz. Floating-point.  
 - The key. This should be a value between 0 (for C) and 11 (for B). The value
   represents how much semitones to diverge from C of course. Integer.  
-- The octave, where the value 4 is the octave containing the A used as tune
-  reference. Integer.  
 - The "alignment". This is a floating-point value in seconds representing the
   length of a single note. Think of it as the length of your *semibreve*,
   although thinking in usual musical compass notation does not make sense here.
@@ -39,11 +37,11 @@ key for each note. The first value will be usually 0, otherwise your first note
 wouldn't be the key itself. All values in this line are integers.
 
 Example, the example music in the repo (named "cdef", tuned to 440hz, in C,
-fourth octave, aligned to half a second, with the major scale):
+aligned to half a second, with the major scale):
 
 ```
 cdef
-440.0 0 4 0.5
+440.0 0 0.5
 7 0 2 4 5 7 9 11
 ```
 
@@ -61,5 +59,10 @@ scale. A 0 means a pause note. Example line from the "cdef" song:
 This sequence means full-sized notes (in this case, half a second). The first
 one is a C (first of the major C scale), the second a D and the third an E.
 
-A line with only the words "sin" or "pulse" switches the parsing channel. Note
-that the channels are played simultaneous.
+A line with the words "sin" or "pulse" switches the parsing channel. Note
+that the channels are played simultaneous. After the channel name, there should
+be two values: the first (integer) sets the octave to be used for the sequence
+(where 4 is the base which contains the tune-reference A). The second one is a
+floating-point number between 0 and 1 to set the volume for the sequence.
+Example: the line `sin 3 0.5` switches to the sine wave channel in the third
+octave and half the volume.

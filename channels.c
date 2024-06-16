@@ -5,11 +5,15 @@
 
 #include "song.h"
 
-static struct {
+typedef struct {
   float incr;
   float idx;
   bool playing;
-} sinState;
+  AudioStream stream;
+} ChannelState;
+
+static ChannelState sinState;
+static ChannelState pulseState;
 
 void updateSinChannel(void *data, unsigned int frames) {
   uint8_t *buffer = (uint8_t *)data;
@@ -22,12 +26,6 @@ void updateSinChannel(void *data, unsigned int frames) {
     if (sinState.idx > 1) sinState.idx = 0;
   }
 }
-
-static struct {
-  float incr;
-  float idx;
-  bool playing;
-} pulseState;
 
 void updatePulseChannel(void *data, unsigned int frames) {
   uint8_t *buffer = (uint8_t *)data;
@@ -50,4 +48,28 @@ void setChannelsFrequency(Channels channels, float frequency) {
   float incr = frequency / SAMPLE_RATE;
   if (channels & CHANNEL_SIN) sinState.incr = incr;
   if (channels & CHANNEL_PULSE) pulseState.incr = incr;
+}
+
+void setChannelsVolume(Channels channels, float volume) {
+  if (channels & CHANNEL_SIN) SetAudioStreamVolume(sinState.stream, volume);
+  if (channels & CHANNEL_PULSE) SetAudioStreamVolume(pulseState.stream, volume);
+}
+
+void initChannels(void) {
+  sinState.stream = LoadAudioStream(SAMPLE_RATE, 8, 1);
+  pulseState.stream = LoadAudioStream(SAMPLE_RATE, 8, 1);
+
+  toggleChannels(CHANNEL_PULSE, false);
+  toggleChannels(CHANNEL_SIN, false);
+  setChannelsFrequency(CHANNEL_PULSE | CHANNEL_SIN, 440);
+
+  SetAudioStreamCallback(sinState.stream, updateSinChannel);
+  SetAudioStreamCallback(pulseState.stream, updatePulseChannel);
+  PlayAudioStream(sinState.stream);
+  PlayAudioStream(pulseState.stream);
+}
+
+void deleteChannels() {
+  UnloadAudioStream(sinState.stream);
+  UnloadAudioStream(pulseState.stream);
 }
